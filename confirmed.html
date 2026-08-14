@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolia — Email Confirmed</title>
+<style>
+  :root {
+    --bg-top: #17121e;
+    --bg-bottom: #0b0910;
+    --surface: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: rgba(255, 255, 255, 0.92);
+    --text-dim: rgba(255, 255, 255, 0.62);
+    --accent: #a892f9;
+    --accent-2: #9d84fa;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wrap { max-width: 480px; width: 100%; padding: 48px 0; text-align: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.6px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 28px;
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 28px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .mark {
+    width: 64px; height: 64px; margin: 0 auto 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(74, 222, 128, 0.12);
+    border: 0.5px solid rgba(74, 222, 128, 0.30);
+  }
+  .mark svg { width: 30px; height: 30px; stroke: var(--ok); }
+  body.is-error .mark {
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.30);
+  }
+  body.is-error .mark svg { stroke: var(--warn); }
+  h1 { font-size: 25px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 12px; }
+  p { color: var(--text); opacity: 0.80; font-size: 15px; }
+  .steps {
+    margin-top: 24px; padding-top: 22px;
+    border-top: 0.5px solid var(--border);
+    text-align: left;
+  }
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+  .step:last-child { margin-bottom: 0; }
+  .num {
+    flex: none; width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(168, 146, 249, 0.15);
+    color: var(--accent);
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .step p { font-size: 14px; opacity: 0.86; }
+  .open {
+    display: inline-block; margin-top: 26px;
+    padding: 14px 30px; border-radius: 999px;
+    background: var(--accent-2); color: #17121e;
+    font-size: 15px; font-weight: 700; text-decoration: none;
+  }
+  footer { margin-top: 32px; color: var(--text-dim); font-size: 13px; }
+  footer a { color: var(--accent-2); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="badge"><span class="dot"></span>Portfolia</div>
+
+  <div class="card">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline id="glyph" points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <h1 id="title">Email confirmed</h1>
+    <p id="lede">Your account is ready. Everything from here happens inside the app.</p>
+
+    <div class="steps" id="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <p>Open Portfolia on your iPhone.</p>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <p>Tap <strong>Sign in with Email</strong> and enter the address and password you just registered.</p>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <p>Anything already saved on your device can be copied to the cloud when the app offers.</p>
+      </div>
+    </div>
+
+    <a class="open" href="portfolia://">Open Portfolia</a>
+  </div>
+
+  <footer>
+    Trouble signing in? Write to <a href="mailto:portfolia.sich.io@gmail.com">portfolia.sich.io@gmail.com</a>
+  </footer>
+</div>
+
+<script>
+  // Supabase reports a bad link in the URL fragment (#error=…&error_code=…).
+  // Nothing from the URL is ever written into the page as markup — the codes
+  // only pick one of the fixed messages below.
+  (function () {
+    var raw = window.location.hash.slice(1) || window.location.search.slice(1);
+    var params = new URLSearchParams(raw);
+    var code = params.get('error_code') || params.get('error');
+    if (!code) return;
+
+    var expired = code === 'otp_expired' || code === 'access_denied';
+    document.body.classList.add('is-error');
+    document.getElementById('glyph').setAttribute('points', '12 8 12 13');
+    document.getElementById('title').textContent =
+      expired ? 'This link has expired' : 'This link did not work';
+    document.getElementById('lede').textContent =
+      expired
+        ? 'Confirmation links are short-lived, and each one works only once.'
+        : 'The link may already have been used, or it was cut short by the mail app.';
+    document.getElementById('steps').innerHTML = '';
+
+    var steps = [
+      'Open Portfolia and create the account again with the same email.',
+      'A fresh confirmation link will arrive in your inbox.',
+      'If the account is already confirmed, just sign in — no new link needed.'
+    ];
+    steps.forEach(function (text, i) {
+      var row = document.createElement('div');
+      row.className = 'step';
+      var num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = String(i + 1);
+      var p = document.createElement('p');
+      p.textContent = text;
+      row.appendChild(num);
+      row.appendChild(p);
+      document.getElementById('steps').appendChild(row);
+    });
+  })();
+</script>
+</body>
+</html>
